@@ -1,0 +1,114 @@
+[gd_scene load_steps=20 format=2]
+
+[ext_resource path="res://alien_red/red__0014_run_3.png" type="Texture" id=1]
+[ext_resource path="res://alien_red/red__0015_run_4.png" type="Texture" id=2]
+[ext_resource path="res://alien_red/red__0012_run_1.png" type="Texture" id=3]
+[ext_resource path="res://alien_red/red__0013_run_2.png" type="Texture" id=4]
+[ext_resource path="res://alien_red/red__0017_run_6.png" type="Texture" id=5]
+[ext_resource path="res://alien_red/red__0016_run_5.png" type="Texture" id=6]
+[ext_resource path="res://Player.gd" type="Script" id=11]
+[ext_resource path="res://alien_red/red__0002_idle_3.png" type="Texture" id=12]
+[ext_resource path="res://alien_red/red__0000_idle_1.png" type="Texture" id=13]
+[ext_resource path="res://alien_red/red__0028_jump_2.png" type="Texture" id=14]
+[ext_resource path="res://alien_red/red__0030_jump_4.png" type="Texture" id=15]
+[ext_resource path="res://alien_red/red__0001_idle_2.png" type="Texture" id=16]
+[ext_resource path="res://alien_red/red__0027_jump_1.png" type="Texture" id=17]
+[ext_resource path="res://alien_red/red__0029_jump_3.png" type="Texture" id=18]
+
+[sub_resource type="SpriteFrames" id=1]
+animations = [ {
+"frames": [ ExtResource( 13 ), ExtResource( 16 ), ExtResource( 12 ) ],
+"loop": true,
+"name": "idle",
+"speed": 4.0
+}, {
+"frames": [ ExtResource( 17 ), ExtResource( 14 ), ExtResource( 18 ), ExtResource( 15 ) ],
+"loop": true,
+"name": "jump",
+"speed": 3.0
+}, {
+"frames": [ ExtResource( 3 ), ExtResource( 4 ), ExtResource( 1 ), ExtResource( 2 ), ExtResource( 6 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "run",
+"speed": 10.0
+}, {
+"frames": [ ExtResource( 15 ) ],
+"loop": true,
+"name": "come_down",
+"speed": 5.0
+} ]
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 8.55913
+height = 22.1568
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 8.92627, 2.37115 )
+
+[sub_resource type="CapsuleShape2D" id=4]
+radius = 9.41431
+height = 23.1121
+
+[sub_resource type="Animation" id=5]
+resource_name = "dano"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.3, 0.5, 0.7, 1 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ), Color( 1, 0.00392157, 0.00392157, 1 ), Color( 1, 1, 1, 1 ), Color( 1, 0.00784314, 0.00784314, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[node name="Player" type="KinematicBody2D"]
+position = Vector2( 228.907, 252.481 )
+script = ExtResource( 11 )
+
+[node name="Sprite" type="AnimatedSprite" parent="."]
+position = Vector2( 2.61963, 6.604 )
+scale = Vector2( 0.10135, 0.108692 )
+frames = SubResource( 1 )
+animation = "come_down"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+visible = false
+current = true
+zoom = Vector2( 0.7, 0.7 )
+limit_left = 0
+limit_top = 0
+limit_right = 2048
+limit_bottom = 1250
+smoothing_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 2.07855, 8.27032 )
+shape = SubResource( 2 )
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2( 0.514038, 0.514038 )
+collision_layer = 4
+collision_mask = 4
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2( 1.81107, 26.8826 )
+shape = SubResource( 3 )
+
+[node name="dano" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 4
+
+[node name="Shape" type="CollisionShape2D" parent="dano"]
+position = Vector2( 2.19531, 7.98321 )
+shape = SubResource( 4 )
+
+[node name="anim" type="AnimationPlayer" parent="."]
+anims/dano = SubResource( 5 )
+[connection signal="body_entered" from="Area2D" to="." method="_on_Area2D_body_entered"]
+[connection signal="body_entered" from="dano" to="." method="_on_dano_body_entered"]
